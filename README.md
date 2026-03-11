@@ -37,10 +37,13 @@ A s dictated by the Merit Order effect, renewables (wind, solar) show a strong n
 > 
 #### 4. Energy Mix Diversity
 Each country operates on a fundamentally different energy mix, meaning a global model would fail. 
-The baseline generation source dictates the market's baseline price (e.g., stable nuclear in France vs. weather-dependent wind in Denmark).
+The baseline generation source dictates the market's baseline price (e.g., stable nuclear in Hunguary vs. weather-dependent wind in Denmark).
 ![Monthly Energy Mix](images/energy_mix.png)
 
-### ⏭ Next Steps
-With the dataset fully cleaned, imputed, and standardized into a high-performance Parquet format, 
-the project moves to **Part 2: Feature Engineering**. This next phase will focus on creating the "memory" for our 
-ML algorithms (Lag Features, Rolling Windows) to capture sequential time-series dependencies.
+### Part 2: Feature Engineering (Time-Series Memory)
+Standard tabular Machine Learning models (like Linear Regression, XGBoost, or LightGBM) process data row by row and natively lack the concept of "time" or "memory". To accurately predict electricity prices, we must manually translate the chronological nature of the market into mathematical features. 
+
+In this critical step, we engineered two types of time-series features to give our models context:
+
+* **Lag Features (24h & 168h):** Electricity markets are highly cyclical. We created shifted columns representing the exact price 24 hours ago (capturing the daily circadian rhythm of the grid) and 168 hours ago (capturing the weekly cycle, e.g., matching a Monday morning to the previous Monday morning).
+* **Rolling Window Statistics:** By calculating moving averages (e.g., the mean price over the trailing 24 hours), we provided the models with "momentum" indicators. This helps the algorithm understand macro-trends, market sentiment, and smooths out sudden, temporary price spikes (outliers).
