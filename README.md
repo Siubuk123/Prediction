@@ -60,3 +60,22 @@ Evaluating this simple rule across the entire European dataset gives us a perfor
 * **R² (Explained Variance): 0.5074** - The simple circadian rhythm of the grid (the 24-hour cycle) explains about 51% of what happens on the energy market.
 
 **The ML Objective:** The remaining 49% of the variance is driven by weather conditions, the energy mix (renewables vs. fossil fuels), and macro-trends. 
+
+### Part 4: First ML Model - Linear Regression (Pipeline)
+
+With our baseline established, we introduced our first true Machine Learning model: **Linear Regression**. To ensure robust evaluation and completely eliminate the risk of Data Leakage, the model was constructed using a professional `scikit-learn` Pipeline.
+
+**Preprocessing Strategy:**
+* **Numerical Features (Generation, Lags):** Missing values were imputed using the training set mean, followed by standardization (`StandardScaler`) to normalize the wide range of megawatt values across different energy sources.
+* **Categorical Features (Countries):** Applied `OneHotEncoder` to allow the model to learn specific market weights and energy mix dynamics for each European country independently.
+
+**Linear Regression Performance:**
+* **MAE:** 21.66 €/MWh *(An improvement of ~3.22 € over the Naive Baseline)*
+* **RMSE:** 30.47 €/MWh
+* **R²:** 0.6948 *(The model now explains nearly 70% of the market variance, up from 51%)*
+
+**Visual Evaluation & Limitations:**
+
+![Linear Regression Results](Images/regression_results.png)
+
+*While Linear Regression successfully captured the general global trend and daily circadian shapes, its purely linear mathematical nature proved too "stiff" to accurately predict severe market anomalies. As seen in the time-series visualization, the model struggles with extreme non-linear events, such as negative prices caused by simultaneous high wind and solar generation. *
