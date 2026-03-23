@@ -79,3 +79,23 @@ With our baseline established, we introduced our first true Machine Learning mod
 ![Linear Regression Results](Images/regression_results.png)
 
 *While Linear Regression successfully captured the general global trend and daily circadian shapes, its purely linear mathematical nature proved too "stiff" to accurately predict severe market anomalies. As seen in the time-series visualization, the model struggles with extreme non-linear events, such as negative prices caused by simultaneous high wind and solar generation. *
+
+### Part 5: Non-Linearity & Ensemble Learning - Random Forest
+
+To overcome the "stiffness" of Linear Regression, we transitioned to tree-based Ensemble Learning. A **Random Forest Regressor** is naturally equipped to handle non-linear relationships and complex feature interactions (e.g., learning the rule that *high wind + high solar + weekend = negative prices*).
+
+Utilizing the exact same preprocessor pipeline (to maintain consistency), we tested the model's ability to capture extreme market drops.
+
+**Random Forest Performance (200 Trees, Max Depth 25):**
+* **MAE:** 18.71 €/MWh *(A massive improvement of ~2.95 € over Linear Regression)*
+* **RMSE:** 26.85 €/MWh
+* **R²:** 0.7629 *(The model now explains over 76% of the market variance)*
+
+**Model Configuration & Computational Performance:**
+To maximize the model's ability to capture complex market patterns, we deployed a robust configuration of the algorithm (200 individual decision trees with a maximum depth of 25). By leveraging multi-core parallel processing (`n_jobs=-1`), the model successfully trained on the entire dataset (>260,000 records) in just **~2 minutes (128 seconds)**. This setup proved highly effective, demonstrating a strong balance between high predictive accuracy and manageable training time.
+
+**Visual Evaluation & Market Anomalies:**
+
+![Random Forest Results](Images/random_forest_results.png)
+
+*Unlike the Linear model, the Random Forest's predictions (orange dashed line) successfully plunge into negative territory, accurately tracking the real price (black line) during severe market oversupply. The model successfully "connected the dots" between weather features and calendar events.*
